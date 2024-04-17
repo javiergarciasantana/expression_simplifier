@@ -184,7 +184,10 @@ public class ExprSimplifier {
         }
         input = par_result;
         i = lower_bound + aux.length();
+        System.out.println("Input: " + input);
       }
+      aux = "";
+      par_result = "";
     }
     for (int i = 0; i < input.length(); ++i) {
       if (input.charAt(i) == '*') {
