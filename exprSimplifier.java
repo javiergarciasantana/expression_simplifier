@@ -85,6 +85,7 @@ public class ExprSimplifier {
     j = i - 1;
     while (j >= 0 && Character.isDigit(input.charAt(j))) {
       val_1 += input.charAt(j);
+
       if (j >= 1 && input.charAt(j - 1) == '-') {
         val_1 += '-';
         flag = true;
@@ -98,7 +99,6 @@ public class ExprSimplifier {
       }
     }
     StringBuilder reversed = new StringBuilder(val_1).reverse();
-    System.out.println("First op: " + val_1);
     val_1 = "";
     stack.push(Integer.parseInt(reversed.toString()));
 
@@ -147,9 +147,6 @@ public class ExprSimplifier {
   }
 
   public String simplifyString(String input) {
-    Stack<Integer> stack = new Stack<>();
-    String val_1 = new String();
-    String val_2 = new String();
     String aux = new String();
     String par_result = new String();
     String result = new String();
@@ -182,7 +179,6 @@ public class ExprSimplifier {
           par_result += input.charAt(k);
         }
         par_result += aux;
-        System.out.println("Upper Bound: " + upper_bound + " of: " + input);
         for (int k = upper_bound + 1; k < input.length(); ++k) {
           par_result += input.charAt(k);
         }
@@ -192,22 +188,26 @@ public class ExprSimplifier {
     }
     for (int i = 0; i < input.length(); ++i) {
       if (input.charAt(i) == '*') {
-        input = Calculator(input, '*', i);
+        input = simplifyString(Calculator(input, '*', i));
+        break;
       }
     }
     for (int i = 0; i < input.length(); ++i) {
       if (input.charAt(i) == '/') {
-        input = Calculator(input, '/', i);
+        input = simplifyString(Calculator(input, '/', i));
+        break;
       }
     }
     for (int i = 0; i < input.length(); ++i) {
       if (input.charAt(i) == '+') {
-        input = Calculator(input, '+', i);
+        input = simplifyString(Calculator(input, '+', i));
+        break;
       }
     }
     for (int i = 0; i < input.length(); ++i) {
       if (input.charAt(i) == '-') {
-        input = Calculator(input, '-', i);
+        input = simplifyString(Calculator(input, '-', i));
+        break;
       }
     }
 
