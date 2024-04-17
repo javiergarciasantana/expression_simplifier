@@ -13,8 +13,8 @@ public class main {
   public static void main(String[] args) { 
     try {
 
-      String input = "8+9 * 15-(-7/3 +7 * 8)/2+ 3 * 7";
-      exprSimplifier simplified_expr = new exprSimplifier(input);
+      String input = "8+9 * 15-(-7/3 +(8/7) +7 * 8)/2+ 3 * 7";
+      ExprSimplifier simplified_expr = new ExprSimplifier(input);
      
     } catch (IllegalArgumentException e) {
       System.out.println("Error: " + e.getMessage());
