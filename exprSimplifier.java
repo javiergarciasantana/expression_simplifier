@@ -159,21 +159,30 @@ public class ExprSimplifier {
 
     for (int i = 0; i < input.length(); ++i) {
       if (input.charAt(i) == '(') {
+        int nParentheses = -1;
         System.out.println("recursivity");
         lower_bound = i;
         j = i + 1;
-        while (j < input.length() && input.charAt(j) != ')') {
-          aux += input.charAt(j);
-          ++j;
-          upper_bound = j;
+        while (j < input.length() && nParentheses != 0) {
+          if (input.charAt(j) == '(') {
+            --nParentheses;
+          } else if (input.charAt(j) == ')') {
+            ++nParentheses;
+          }
+          if (nParentheses != 0) {
+            aux += input.charAt(j);
+            ++j;
+            upper_bound = j;
+          }
         }
+  
         aux = simplifyString(aux);
-        System.out.println("aux: " + aux);
         
         for (int k = 0; k < lower_bound; ++k) {
           par_result += input.charAt(k);
         }
         par_result += aux;
+        System.out.println("Upper Bound: " + upper_bound + " of: " + input);
         for (int k = upper_bound + 1; k < input.length(); ++k) {
           par_result += input.charAt(k);
         }
