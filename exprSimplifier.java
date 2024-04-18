@@ -1,4 +1,4 @@
-// AUTOR: Javier Garcia Santana(El mismisimo coluca)(viva tacoronte,tnf)
+// AUTOR: Javier Garcia Santana(El mismisimo coluca)(viva tacoronte,tenerife)
 // DATE: 16/4/2024
 // EMAIL: javier.santana@tprs.stud.vu.lt
 // VERSION: 4.0
