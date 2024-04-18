@@ -1,4 +1,4 @@
-// AUTOR: Javier Garcia Santana(El mismisimo coluca)(viva tacoronte,tenerife)
+// AUTOR: Javier Garcia Santana(El mismisimo coluca)(viva tacoronte, tenerife)
 // DATE: 16/4/2024
 // EMAIL: javier.santana@tprs.stud.vu.lt
 // VERSION: 4.0
@@ -20,9 +20,10 @@ public class main {
   public static void main(String[] args) { 
     try {
 
-      String filePath = "expression_simplifier/input.txt";
+      String filePath = "expression_simplifier/input.txt"; //if running the code inside the dir, remove the dir path
       String outputFilePath = "expression_simplifier/output.txt";
       try {
+
         // Step 1: Read the contents of the text file
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
         StringBuilder fileContent = new StringBuilder();
@@ -35,6 +36,7 @@ public class main {
         // Step 2: Process the content to generate the result string
         String input = fileContent.toString().trim(); // Assuming the content is the input expression
         ExprSimplifier simplified_expr = new ExprSimplifier(input);
+        
         String result = simplified_expr.getResult();
 
         // Step 3: Print both the content of the text file and the result string
@@ -52,6 +54,7 @@ public class main {
         writer.close();
         
         System.out.println("\nResult has been written to " + outputFilePath);
+
       } catch (IOException e) {
             e.printStackTrace();
       }
