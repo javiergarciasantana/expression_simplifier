@@ -1,3 +1,11 @@
+// AUTOR: Javier Garcia Santana(El mismisimo coluca)(viva tacoronte,tnf)
+// DATE: 16/4/2024
+// EMAIL: javier.santana@tprs.stud.vu.lt
+// VERSION: 4.0
+// COURSE: OOP
+// NAME: Expression Simplifier
+// COMMENTS: File where the exprSimplifier class is declared
+//
 
 package expression_simplifier;
 
@@ -5,84 +13,67 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Stack;
 
-
 public class ExprSimplifier {
-  // Private attributes
-  private static String input_;
-  private String result_;
+  private String input;
+  private String result;
 
-  // Constructor
+  /**
+   * Constructor for ExprSimplifier class.
+   * Initializes the input expression, removes spaces, validates the input,
+   * and simplifies the expression.
+   *
+   * @param input The expression to be simplified
+   */
   public ExprSimplifier(String input) {
-    ExprSimplifier.input_ = input;
-    System.out.println("Expression to be simplified");
-    System.out.println(getinput());
+    this.input = input.replaceAll("\\s", "");
     validateString();
-    removeSpacesInput();
-    result_ = simplifyString(getinput());
+    result = simplifyString(this.input);
   }
 
-  // Getter for input_
-  public static String getinput() {
-    return input_;
-  }
-
-  // Setter for input_
-  public static void setinput(String input) {
-    ExprSimplifier.input_ = input;
-  }
-
-  public static void validateString() throws IllegalArgumentException {
-    // Regular expression to match characters that are not digits or operators
-    String invalidCharRegex = "[^\\d()+\\-*/()\\s]";
-    
-    // Compile the pattern
+  /**
+   * Validates the input expression to ensure it contains only valid characters.
+   * Throws an IllegalArgumentException if invalid characters are found.
+   */
+  private void validateString() {
+    String invalidCharRegex = "[^\\d()+\\-*/()]";
     Pattern pattern = Pattern.compile(invalidCharRegex);
-    
-    String input = getinput();
-    // Match the input string
     Matcher matcher = pattern.matcher(input);
-    
-    // If any invalid character is found, throw an exception
     if (matcher.find()) {
       throw new IllegalArgumentException("The string contains invalid characters.");
     }
   }
 
-  public static void removeSpacesInput() {
-    String input = getinput();
-    String input_no_spaces = new String();
-    for (char ch : input.toCharArray()) {
-      if (ch != ' ') {
-        input_no_spaces += ch;
-      }
-    }
-    setinput(input_no_spaces);
-    System.out.println("String without spaces: " + input_no_spaces);
+  /**
+   * Checks if a character is an arithmetic operator (+, -, *, /).
+   *
+   * @param c The character to be checked
+   * @return True if the character is an operator, otherwise false
+   */
+  private boolean isOperator(char c) {
+    return c == '+' || c == '-' || c == '*' || c == '/';
   }
 
-  public boolean isSymbol(char c) {
-    if (c == '+' || c == '-' ||c == '*' || c == '/' || c == '(' || c == ')') {
-      return true;
-    }
-    return false;
-  }
-
-  public String Calculator(String input, char symbol, int i) {
-    System.out.println("Calculator input: " + input + "  i: " + i);
+  /**
+   * Evaluates an arithmetic operation in the input expression.
+   *
+   * @param input  The input expression
+   * @param symbol The operator symbol (+, -, *, /)
+   * @param index  The index of the operator in the expression
+   * @return The input expression with the operation result
+   */
+  private String evaluateOperation(String input, char symbol, int index) {
+    System.out.println("Calculator input: " + input + "  i: " + index);
 
     Stack<Integer> stack = new Stack<>();
     String val_1 = new String();
     String val_2 = new String();
-    String aux = new String();
-    String result = new String();
     boolean flag = false;
-    int j = 0;
-    int op_1 = 0;
-    int op_2 = 0;
+    int j = index - 1;
+    int op_1, op_2 = 0;
     int lower_bound = 0;
     int upper_bound = 0;
-
-    j = i - 1;
+    
+    // Extract operand 1
     while (j >= 0 && Character.isDigit(input.charAt(j))) {
       val_1 += input.charAt(j);
 
@@ -100,24 +91,24 @@ public class ExprSimplifier {
     }
     StringBuilder reversed = new StringBuilder(val_1).reverse();
     val_1 = "";
-    stack.push(Integer.parseInt(reversed.toString()));
+    op_1 = (Integer.parseInt(reversed.toString()));
 
-    j = i + 1;
+    j = index + 1;
     if (input.charAt(j) == '-') {
       val_2 += '-';
       ++j;
     } 
+
+    // Extract operand 2
     while (j < input.length() && Character.isDigit(input.charAt(j))) {
       val_2 += input.charAt(j);
       ++j;
       upper_bound = j;
     }
-    stack.push(Integer.parseInt(val_2));
+    op_2 = (Integer.parseInt(val_2));
     val_2 = "";
-    while (!stack.isEmpty()) {
-      op_2 = stack.pop();
-      op_1 = stack.pop();
-    }
+
+    // Perform the operation
     switch (symbol) {
       case '+':
         stack.push(op_1 + op_2);
@@ -134,90 +125,61 @@ public class ExprSimplifier {
       default:
         break;
     }
-    aux = String.valueOf(stack.pop());
-    for (int k = 0; k < lower_bound + 1; ++k) {
-      result += input.charAt(k);
-    }
-    result += aux;
-    for (int k = upper_bound; k < input.length(); ++k) {
-      result += input.charAt(k);
-    }
+    // Replace the operation in the input expression with the result
+    String result = stack.pop().toString();
+    result = input.substring(0, lower_bound + 1) + result + input.substring(upper_bound);
+ 
     System.out.println("Operation: " + op_1 + symbol + op_2 + "= " + result);
     return result;
   }
 
-  public String simplifyString(String input) {
-    String aux = new String();
-    String par_result = new String();
-    String result = new String();
-    int j = 0;
-    int lower_bound = 0;
-    int upper_bound = 0;
-
-    for (int i = 0; i < input.length(); ++i) {
-      if (input.charAt(i) == '(') {
-        int nParentheses = -1;
-        System.out.println("recursivity");
-        lower_bound = i;
-        j = i + 1;
-        while (j < input.length() && nParentheses != 0) {
-          if (input.charAt(j) == '(') {
-            --nParentheses;
-          } else if (input.charAt(j) == ')') {
-            ++nParentheses;
+  /**
+   * Simplifies the input expression recursively.
+   * Handles parentheses and arithmetic operations.
+   *
+   * @param input The input expression to be simplified
+   * @return The simplified expression
+   */
+  private String simplifyString(String input) {
+    String result = input;
+    for (int i = 0; i < result.length(); i++) {
+      char c = result.charAt(i);
+      if (c == '(') {
+        int nParentheses = 1;
+        int j = i + 1;
+        while (j < result.length() && nParentheses != 0) {
+          if (result.charAt(j) == '(') {
+            nParentheses++;
+          } else if (result.charAt(j) == ')') {
+            nParentheses--;
           }
-          if (nParentheses != 0) {
-            aux += input.charAt(j);
-            ++j;
-            upper_bound = j;
-          }
+          j++;
         }
-  
-        aux = simplifyString(aux);
-        
-        for (int k = 0; k < lower_bound; ++k) {
-          par_result += input.charAt(k);
-        }
-        par_result += aux;
-        for (int k = upper_bound + 1; k < input.length(); ++k) {
-          par_result += input.charAt(k);
-        }
-        input = par_result;
-        i = lower_bound + aux.length();
-        System.out.println("Input: " + input);
-      }
-      aux = "";
-      par_result = "";
-    }
-    for (int i = 0; i < input.length(); ++i) {
-      if (input.charAt(i) == '*') {
-        input = simplifyString(Calculator(input, '*', i));
-        break;
-      }
-    }
-    for (int i = 0; i < input.length(); ++i) {
-      if (input.charAt(i) == '/') {
-        input = simplifyString(Calculator(input, '/', i));
-        break;
-      }
-    }
-    for (int i = 0; i < input.length(); ++i) {
-      if (input.charAt(i) == '+') {
-        input = simplifyString(Calculator(input, '+', i));
-        break;
-      }
-    }
-    for (int i = 0; i < input.length(); ++i) {
-      if (input.charAt(i) == '-') {
-        input = simplifyString(Calculator(input, '-', i));
-        break;
+        System.out.println("Substring= " + result.substring(i + 1, j - 1));
+
+        String simplifiedExpression = simplifyString(result.substring(i + 1, j - 1));
+        result = result.substring(0, i) + simplifiedExpression + result.substring(j);
+        System.out.println("Result= " + result);
       }
     }
 
-  
-    result = input;
-    System.out.println("Result= " + result);
+    for (char op : new char[]{'*', '/', '+', '-'}) {
+      for (int i = 0; i < result.length(); i++) {
+        if (result.charAt(i) == op) {
+          result = simplifyString(evaluateOperation(result, op, i));
+          break;
+        }
+      }
+    }
+    return result;
+  }
 
+  /**
+   * Returns the result of the expression simplification.
+   *
+   * @return The simplified expression.
+   */
+  public String getResult() {
     return result;
   }
 }

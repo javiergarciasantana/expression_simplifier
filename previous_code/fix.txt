@@ -1,0 +1,83 @@
+import java.util.Stack;
+
+public class fix {
+    public String evaluateOperation(String input, char symbol, int index) {
+    System.out.println("Calculator input: " + input + "  i: " + i);
+
+    Stack<Integer> stack = new Stack<>();
+    String val_1, val_2 = new String();
+    // String aux = new String();
+    // String result = new String();
+    boolean flag = false;
+    int j = index - 1;
+    int op_1, op_2 = 0;
+    int lower_bound = 0;
+    int upper_bound = 0;
+    
+    // Extract operand 1
+    while (j >= 0 && Character.isDigit(input.charAt(j))) {
+      val_1 += input.charAt(j);
+
+      if (j >= 1 && input.charAt(j - 1) == '-') {
+        val_1 += '-';
+        flag = true;
+      }
+      --j;
+
+      if (flag) {
+        lower_bound = j - 1;
+      } else {
+        lower_bound = j;
+      }
+    }
+    StringBuilder reversed = new StringBuilder(val_1).reverse();
+    val_1 = "";
+    op_1 = (Integer.parseInt(reversed.toString()));
+
+    j = index + 1;
+    if (input.charAt(j) == '-') {
+      val_2 += '-';
+      ++j;
+    } 
+
+    // Extract operand 2
+    while (j < input.length() && Character.isDigit(input.charAt(j))) {
+      val_2 += input.charAt(j);
+      ++j;
+      upper_bound = j;
+    }
+    op_2 = (Integer.parseInt(val_2));
+    val_2 = "";
+ 
+    // Perform the operation
+    switch (symbol) {
+      case '+':
+        stack.push(op_1 + op_2);
+        break;
+      case '-':
+        stack.push(op_1 - op_2);
+        break;
+      case '*':
+        stack.push(op_1 * op_2);
+        break;
+      case '/':
+        stack.push(op_1 / op_2);
+        break;
+      default:
+        break;
+    }
+    // Replace the operation in the input expression with the result
+    String result = stack.pop().toString();
+    result = input.substring(0, lower_bound) + result + input.substring(upper_bound);
+    System.out.println("Result= " + result);
+    // for (int k = 0; k < lower_bound + 1; ++k) {
+    //   result += input.charAt(k);
+    // }
+    // result += aux;
+    // for (int k = upper_bound; k < input.length(); ++k) {
+    //   result += input.charAt(k);
+    // }
+    System.out.println("Operation: " + op_1 + symbol + op_2 + "= " + result);
+    return result;
+  }
+}
