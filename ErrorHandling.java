@@ -50,6 +50,9 @@ public class ErrorHandling {
         if ((lastWasOperator && currentChar != '-') || (lastWasOpeningParenthesis && currentChar != '-') || i == input.length() - 1 || (currentChar == '-' && input.charAt(i + 1) == '-')) {
           throw new IllegalArgumentException("Two operators together at position " + i);
         }
+        if (currentChar == '/' && input.charAt(i+1) == '0') {
+          throw new IllegalArgumentException("Division by zero not allowed");
+        }
         lastWasNumber = false;
         lastWasOperator = true;
         lastWasOpeningParenthesis = false;
@@ -82,7 +85,7 @@ public class ErrorHandling {
         lastWasOperator = true;
         lastWasOpeningParenthesis = false;
         lastWasClosingParenthesis = false;
-      }
+      } 
     }
   }
 
